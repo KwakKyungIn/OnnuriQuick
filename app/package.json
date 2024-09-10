@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "ejs": "^3.1.10",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4"
   },
   "name": "digitf-html",
   "version": "1.0.0",
@@ -9,9 +10,8 @@
   "bin": {
     "digitf-html": "bin/www.js"
   },
-  "devDependencies": {},
   "scripts": {
-    "start" : "node ./bin/www.js",
+    "start": "nodemon ./bin/www.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
