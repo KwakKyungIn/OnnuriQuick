@@ -17,5 +17,7 @@ router.get("/order_entry", ctrl.output.order_entry);
 router.get("/order_list", ctrl.output.order_list);
 
 router.get("/signup", ctrl.output.signup);
+router.post("/signup", ctrl.process.signup);
+
 
 module.exports = router;

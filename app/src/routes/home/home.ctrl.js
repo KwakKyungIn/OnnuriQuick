@@ -39,6 +39,7 @@ const process = {
         const user = new User(req.body);
         const response = user.login();
         return res.json(response);
+ 
     //     const id = req.body.id,
     //         password = req.body.password;
         
@@ -56,6 +57,13 @@ const process = {
 
     //     return res.json(response);
     },
+
+    signup : (req, res) => {
+        const user = new User(req.body);
+        const response = user.signup();
+        return res.json(response);
+    },
+
 };
 
 

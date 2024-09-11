@@ -111,25 +111,34 @@
         <div class="col-md-6">
           <form action="">
             <div>
-              <label for="email">E-Mail Address</label>
-              <input id = "email" name = "email" type="text" />
+              <label for="signup_id">ID</label>
+              <input id = "signup_id" name = "email" type="text" />
               <!-- autocoplete = "on" 까먹지 말자-->
             </div>
+
+            <div>
+              <label for="name">Name</label>
+              <input id = "name" name = "name" type="text" />
+              <!-- autocoplete = "on" 까먹지 말자-->
+            </div>
+
             <div>
               <label for="password"
               >Password
             </label>
               <input id="password" name="password" type="password" />
             </div>
+
             <div>
             <label for="password"
               >Confirm Password
             </label>
 
-              <input id="password" name="password" type="password" />
+              <input id="confirm-password" name="confirm-password" type="password" />
 
               <div class="user_option">
-                <button type="button" onclick="location.href='login'">
+                <button id = "signupBtn" type="button" >
+                  <!-- onclick="location.href='login'" 이걸로 회원가입 버튼에 링크 지정하자-->
                         Sign Up
                 </button>
               
@@ -221,6 +230,7 @@
 
   <script type="text/javascript" src="js/home/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/home/bootstrap.js"></script>
+  <script src = "js/home/signup.js" defer ></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js">
   </script>
   <script type="text/javascript">
