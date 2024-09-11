@@ -40,27 +40,11 @@ const process = {
         const response = await user.login();
         return res.json(response);
  
-    //     const id = req.body.id,
-    //         password = req.body.password;
-        
-    //     const users = UserStorage.getUsers("id", "password");
-    //     const response ={};
-    //     if(users.id.includes(id)){
-    //         const idx = users.id.indexOf(id);
-    //         if(users.password[idx]===password){
-    //             response.success = true;
-    //             return res.json(response);
-    //         }
-    //     }
-    //     response.success = false;
-    //     response.msg = "로그인에 실패하였습니다";
-
-    //     return res.json(response);
     },
 
-    signup : (req, res) => {
+    signup : async (req, res) => {
         const user = new User(req.body);
-        const response = user.signup();
+        const response = await user.signup();
         return res.json(response);
     },
 
