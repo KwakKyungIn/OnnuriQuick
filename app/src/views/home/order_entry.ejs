@@ -93,7 +93,7 @@
   </div>
 
 
-  <!-- about section -->
+  <!-- 주요 화면 섹션 -->
 
   <section class="about_section layout_padding">
     <div class="container">
@@ -102,23 +102,69 @@
           <div class="detail-box">
             <div class="heading_container">
               <h2>
-                Order Entry
+                주문 입력
               </h2>
-
             </div>
+            
             <p>
-              주문 입력창~~~~
+              수령인 정보
             </p>
-            <a href="">
-              Read More
-            </a>
+            
+            <input id = "" name = "customer_info" placeholder="수령인 입력" type="text" />
+            <input id = "" name = "phone_number" placeholder="휴대폰 번호 입력" type="text" />
+
+            <p>
+              주소 검색
+            </p>
+
+            <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+            <input type="text" id="sample6_postcode" placeholder="우편번호">
+            <div>
+            <input type="text" id="sample6_address" placeholder="주소"><br>
+            <input type="text" id="sample6_extraAddress" placeholder="참고항목">
+            </div>
+            <input type="text" id="sample6_detailAddress" placeholder="상세주소">
+            
+            
+            
+            
+
+
+
+              <div>
+                <label for="email">배달 요청</label>
+                <input type="checkbox" id="scales" name="scales"/>
+                <label for="scales">카드 단말기</label>
+                <div>
+                <input class="asdasd" name = "customer_info" placeholder="요청사항" type="text" />
+                </div>
+              </div>
+               
+             
+
+            <p>
+              공동현관
+            </p>
+
+            <select name="option" id="option">
+              <option value="nowbaedal">경비실 호출</option>
+              <option value="etc">기타 옵션</option>
+            </select>
+            <input id = "" name = "customer_info" placeholder="비밀번호 입력" type="text" />
+            <div>
+              <p>
+              공급가액
+              </p>
+              <input class="asdasd" name = "customer_info" placeholder="주문금액 입력" type="text" />
+            </div>
+
+            <button  >
+              Login
+            </button>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="img-box">
-            <img src="views/home/images/about-img.png" alt="">
-          </div>
-        </div>
+        
+        
       </div>
     </div>
   </section>
@@ -201,6 +247,8 @@
 
   <script type="text/javascript" src="js/home/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/home/bootstrap.js"></script>
+  <script type="text/javascript" src="js/home/address.js"></script>
+  <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js">
   </script>
   <script type="text/javascript">
