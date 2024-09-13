@@ -1,6 +1,7 @@
 "use strict";
 
 const User = require("../../models/User");
+const Customer = require("../../models/Customer");
 //const UserStorage = require("../../models/UserStorage");
 
 
@@ -45,6 +46,12 @@ const process = {
     signup : async (req, res) => {
         const user = new User(req.body);
         const response = await user.signup();
+        return res.json(response);
+    },
+
+    order_entry : async (req, res) => {
+        const customer = new Customer(req.body);
+        const response = await customer.order_entry();
         return res.json(response);
     },
 

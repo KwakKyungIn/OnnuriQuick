@@ -110,8 +110,8 @@
               수령인 정보
             </p>
             
-            <input id = "" name = "customer_info" placeholder="수령인 입력" type="text" />
-            <input id = "" name = "phone_number" placeholder="휴대폰 번호 입력" type="text" />
+            <input id = "customer_name" name = "customer_info" placeholder="수령인 입력" type="text" />
+            <input id = "phone_number" name = "phone_number" placeholder="휴대폰 번호 입력" type="text" />
 
             <p>
               주소 검색
@@ -121,9 +121,10 @@
             <input type="text" id="sample6_postcode" placeholder="우편번호">
             <div>
             <input type="text" id="sample6_address" placeholder="주소"><br>
-            <input type="text" id="sample6_extraAddress" placeholder="참고항목">
-            </div>
+            <input type="text" id="sample6_extraAddress" placeholder="추가주소(자동입력됨)">
             <input type="text" id="sample6_detailAddress" placeholder="상세주소">
+            </div>
+            
             
             
             
@@ -158,8 +159,8 @@
               <input class="asdasd" name = "customer_info" placeholder="주문금액 입력" type="text" />
             </div>
 
-            <button >
-              Login
+            <button id = "takeBtn" type = "button">
+              접수
             </button>
           </div>
         </div>
@@ -248,6 +249,7 @@
   <script type="text/javascript" src="js/home/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/home/bootstrap.js"></script>
   <script type="text/javascript" src="js/home/address.js"></script>
+  <script src = "js/home/order_entry.js" defer ></script>
   <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js">
   </script>
