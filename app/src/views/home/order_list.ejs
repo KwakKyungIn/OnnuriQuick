@@ -100,65 +100,91 @@
     <div class="container">
       <div class="heading_container">
         <h2>
-          Order List
+          주문 리스트
         </h2>
       </div>
-      <div class="brand_container layout_padding2">
-        <div class="box">
-          <a href="">
-            <div class="new">
-              <h5>
-                New
-              </h5>
-            </div>
-            <div class="img-box">
-              <img src="views/home/images/slider-img.png" alt="">
-            </div>
-            <div class="detail-box">
-              <h6 class="price">
-                $100
-              </h6>
-              <h6>
-                Chair
-              </h6>
-            </div>
-          </a>
-        </div>
-        <div class="box">
-          <a href="">
-            <div class="img-box">
-              <img src="views/home/images/slider-img.png" alt="">
-            </div>
-            <div class="detail-box">
-              <h6 class="price">
-                $100
-              </h6>
-              <h6>
-                Chair
-              </h6>
-            </div>
-          </a>
-        </div>
-        <div class="box">
-          <a href="">
-            <div class="img-box">
-              <img src="views/home/images/slider-img.png" alt="">
-            </div>
-            <div class="detail-box">
-              <h6 class="price">
-                $100
-              </h6>
-              <h6>
-                Chair
-              </h6>
-            </div>
-          </a>
-        </div>
+
+      
+     
+
+      <div id="backbody">
         
+        <div id="frame">
+        
+        <form>
+       
+      
+          <br/>
+          
+          <div id="search">
+          
+            <div style="border: solid 1px gray; padding: 20px;">
+              <select style="padding: 5px;">
+          
+                <option>전체 주문처리상태</option>
+            
+                <option>입금전</option>
+                
+                <option>배송준비중</option>
+              
+                <option>배송중</option>
+              
+                <option>배송완료</option>
+              
+                <option>취소</option>
+              
+                <option>교환</option>
+                
+                <option>반품</option>
+          
+              </select>&nbsp;
+          
+          
+              <input type="date"
+              style="padding: 3px;" /> ~ <input type="date" style="padding: 3px;" />&nbsp;
+
+              <button type ="button" id = "loginBtn">
+               조회
+              </button>
+          
+             
+          
+          
+            </div>  
+          </div>
+
+          <br/><br/>
+
+          <span style="font-size: 10pt; font-weight: bold; display:inline-block; padding: 10px 10px; ">주문 상품 정보</span> 
+          <table id="productInfo">
+            <thead>
+              <tr>
+                <th>주문일자[주문번호]</th>
+                <th>이미지</th>
+                <th style="width: 550px;">상품정보</th>
+                <th>수량</th>
+                <th>상품구매금액</th>
+                <th>취소/ 교환/반품</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+
+              </tr>
+            </tbody>
+          </table>
+          <div align ="center">
+            <span style=" display:inline-block; padding-top: 30px;">주문 내역이 없습니다.</span>
+          </div>
+        </form>
       </div>
-      <a href="" class="brand-btn">
-        See More
-      </a>
+    </div>
+       
+                
+         
+        
+     
     </div>
   </section>
 

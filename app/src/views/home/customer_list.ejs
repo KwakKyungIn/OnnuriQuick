@@ -100,49 +100,77 @@
 
   <!-- contact section -->
 
-  <section class="contact_section layout_padding">
-    <div class="container ">
+  <section class="brand_section layout_padding">
+    <div class="container">
       <div class="heading_container">
-        <h2 class="">
-          Customer List
+        <h2>
+          고객 리스트
         </h2>
       </div>
 
-    </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <form action="">
-            <div>
-              <input type="text" placeholder="Name" />
-            </div>
-            <div>
-              <input type="email" placeholder="Email" />
-            </div>
-            <div>
-              <input type="text" placeholder="Phone" />
-            </div>
-            <div>
-              <input type="text" class="message-box" placeholder="Message" />
-            </div>
-            <div class="d-flex ">
-              <button>
-                SEND
+      
+     
+
+      <div id="backbody">
+        
+        <div id="frame">
+        
+        <form>
+       
+      
+          <br/>
+          
+          <div id="search">
+          
+            <div style="border: solid 1px gray; padding: 20px;">
+             
+          
+          
+              <input id = "" name = "customer_info" placeholder="고객명 입력" type="text" />
+              <input id = "" name = "phone_number" placeholder="휴대폰 번호 입력" type="text" />
+
+              <button type ="button" id = "loginBtn">
+               조회
               </button>
-            </div>
-          </form>
-        </div>
-        <div class="col-md-6">
-          <div class="map_container">
-            <div class="map-responsive">
-              <iframe
-                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&q=Eiffel+Tower+Paris+France"
-                width="600" height="300" frameborder="0" style="border:0; width: 100%; height:100%"
-                allowfullscreen></iframe>
-            </div>
+          
+             
+          
+          
+            </div>  
           </div>
-        </div>
+
+          <br/><br/>
+
+          <span style="font-size: 10pt; font-weight: bold; display:inline-block; padding: 10px 10px; ">주문 상품 정보</span> 
+          <table id="productInfo">
+            <thead>
+              <tr>
+                <th>주문일자[주문번호]</th>
+                <th>이미지</th>
+                <th style="width: 550px;">상품정보</th>
+                <th>수량</th>
+                <th>상품구매금액</th>
+                <th>취소/ 교환/반품</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+
+              </tr>
+            </tbody>
+          </table>
+          <div align ="center">
+            <span style=" display:inline-block; padding-top: 30px;">주문 내역이 없습니다.</span>
+          </div>
+        </form>
       </div>
+    </div>
+       
+                
+         
+        
+     
     </div>
   </section>
 
