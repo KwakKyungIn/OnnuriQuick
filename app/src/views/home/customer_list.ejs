@@ -32,7 +32,7 @@
 <body class="sub_page">
   <div class="hero_area">
     <!-- header section strats -->
-    <header class="header_section">
+    <header class="about_section">
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container">
           <a class="navbar-brand" href="home">
@@ -100,7 +100,7 @@
 
   <!-- contact section -->
 
-  <section class="brand_section layout_padding">
+  <section class="heading_section layout_padding">
     <div class="container">
       <div class="heading_container">
         <h2>
@@ -121,47 +121,86 @@
           <br/>
           
           <div id="search">
-          
             <div style="border: solid 1px gray; padding: 20px;">
-             
-          
-          
-              <input id = "" name = "customer_info" placeholder="고객명 입력" type="text" />
-              <input id = "" name = "phone_number" placeholder="휴대폰 번호 입력" type="text" />
-
-              <button type ="button" id = "loginBtn">
-               조회
-              </button>
-          
-             
-          
-          
+                <input id="customerInfo" name="customer_info" placeholder="고객명 입력" type="text" />
+                <input id="phoneNumber" name="phone_number" placeholder="휴대폰 번호 입력" type="text" />
+        
+                <button type="button" id="Btn">조회</button>
             </div>  
-          </div>
+        </div>
 
           <br/><br/>
 
           <span style="font-size: 10pt; font-weight: bold; display:inline-block; padding: 10px 10px; ">주문 상품 정보</span> 
-          <table id="productInfo">
+          <div id="table-container"></div>
+        
+          <!-- <script>
+            // 서버에서 데이터를 가져와서 테이블 생성
+            fetch('/customers')
+                .then(response => response.json()) // 서버에서 JSON 데이터 받음
+                .then(result => {
+                    let tableTag = '<table>\n';
+                    tableTag += `<thead>
+                                    <tr>
+                                        <th>고객명</th>
+                                        <th>휴대폰 번호</th>
+                                        <th>주소</th>
+                                    </tr>
+                                 </thead>\n`;
+                    tableTag += '<tbody>\n';
+                    result.forEach(customer => {
+                        tableTag += `<tr>
+                                        <td>${customer.name}</td>
+                                        <td>${customer.phone}</td>
+                                        <td>${customer.address}</td>
+                                     </tr>\n`;
+                    });
+                    tableTag += '</tbody>\n</table>';
+    
+                    document.getElementById('table-container').innerHTML = tableTag; // HTML에 테이블 삽입
+                })
+                .catch(error => console.error('Error:', error)); // 에러 처리
+        </script>
+          -->
+  
+
+
+          <table id="productInfo" >
             <thead>
               <tr>
-                <th>주문일자[주문번호]</th>
-                <th>이미지</th>
-                <th style="width: 550px;">상품정보</th>
-                <th>수량</th>
-                <th>상품구매금액</th>
-                <th>취소/ 교환/반품</th>
+                <th style="width: 100px;">고객명</th>
+                <th style="width: 150px;">휴대폰 번호</th>
+                <th style="width: 550px;">주소</th>
               </tr>
             </thead>
 
-            <tbody>
-              <tr>
-
-              </tr>
+            
+              <tbody>
+                <% customers.forEach(customer => { %>
+                    <tr>
+                        <td><%= customer.name %></td>
+                        <td><%= customer.phone_number%></td>
+                        <td><%= customer.address %></td>
+                    </tr>
+                <% }) %>
+            
             </tbody>
           </table>
+          <div class="paging">
+            <div class="pagination">
+              <% if (totalPages > 1) { %>
+                  <% for(let i = 1; i <= totalPages; i++) { %>
+                      <a href="/customer_list?page=<%= i %>&limit=<%= limit %>&customer_info=<%= customerInfo %>&phone_number=<%= phoneNumber %>"
+                         class="<%= i === currentPage ? 'active' : '' %>">
+                         <%= i %>
+                      </a>
+                  <% } %>
+              <% } %>
+          </div>
+          </div>
+           
           <div align ="center">
-            <span style=" display:inline-block; padding-top: 30px;">주문 내역이 없습니다.</span>
+            <span style=" display:inline-block; padding-top: 30px;"></span>
           </div>
         </form>
       </div>
@@ -251,8 +290,20 @@
 
   <script type="text/javascript" src="js/home/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/home/bootstrap.js"></script>
+  <script type="text/javascript" src="models/UserStorage.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.min.js">
   </script>
+  <script>
+    document.getElementById('Btn').addEventListener('click', function() {
+        const customerInfo = document.getElementById('customerInfo').value;
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        
+        // 조회 버튼 클릭 시 해당 파라미터로 페이지 이동
+        const url = `/customer_list?customer_info=${customerInfo}&phone_number=${phoneNumber}`;
+        window.location.href = url;
+    });
+</script>
+
   <script type="text/javascript">
     $(".owl-carousel").owlCarousel({
       loop: true,

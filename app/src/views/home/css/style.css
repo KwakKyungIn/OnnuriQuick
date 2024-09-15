@@ -144,7 +144,7 @@ a:focus {
   color: initial;
 }
 
-.btn,
+.btn
 .btn:focus {
   outline: none !important;
   -webkit-box-shadow: none;
@@ -1110,3 +1110,71 @@ table#productInfo{
   text-align: center;
   padding: 20px 0;
 }
+
+
+div.paging {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 20px;
+  justify-content: center;
+}
+div.paging>i,
+div.paging>div.pages {
+  margin: 0 10px;
+}
+div.paging>i,
+div.paging>div.pages>span {
+  margin: 0 3px;
+  cursor: pointer;
+}
+span.active {
+  color: orangered;
+  font-weight: bold;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination a {
+  margin: 0 5px;                  /* 버튼 간의 간격 */
+  padding: 10px 15px;              /* 버튼 안쪽 여백 */
+  text-decoration: none;           /* 링크 밑줄 제거 */
+  color: #333;                     /* 기본 글자 색상 */
+  font-weight: normal;             /* 기본 글자 굵기 */
+  transition: color 0.3s;          /* 호버 시 글자 색상 전환 효과 */
+}
+
+.pagination a:hover {
+  color: #ff6600;                  /* 호버 시 글자 색상 주황색으로 변경 */
+}
+
+/* 활성화된 페이지 (현재 페이지) 스타일 */
+.pagination a.active {
+  color: #ff6600;                  /* 현재 페이지 글자 색상 주황색 */
+  font-weight: bold;               /* 현재 페이지 글자 굵게 */
+  pointer-events: none;            /* 현재 페이지는 클릭할 수 없도록 설정 */
+}
+
+/* .Btn {
+  display: inline-block;
+  padding: 12px 45px;
+  background-color: #24d278;
+  color: #ffffff;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  border-radius: 30px;
+  color: #fff;
+  margin-top: 35px;
+}
+
+.Btn:hover {
+  background-color: transparent;
+  border-color: #24d278;
+  color: #24d278;
+} */

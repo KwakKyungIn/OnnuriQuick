@@ -121,7 +121,7 @@
             <div style="border: solid 1px gray; padding: 20px;">
               <select style="padding: 5px;">
           
-                <option>전체 주문처리상태</option>
+                <option>배달 현황</option>
             
                 <option>입금전</option>
                 
@@ -143,7 +143,7 @@
               <input type="date"
               style="padding: 3px;" /> ~ <input type="date" style="padding: 3px;" />&nbsp;
 
-              <button type ="button" id = "loginBtn">
+              <button type ="button" id = "searchBtn">
                조회
               </button>
           
@@ -159,12 +159,13 @@
           <table id="productInfo">
             <thead>
               <tr>
-                <th>주문일자[주문번호]</th>
-                <th>이미지</th>
-                <th style="width: 550px;">상품정보</th>
-                <th>수량</th>
-                <th>상품구매금액</th>
-                <th>취소/ 교환/반품</th>
+                <th>현황</th>
+                <th>접수번호</th>
+                <th>수령인</th>
+                <th style="width: 550px;">상세주소</th>
+                
+                <th>픽업예상/배달완료</th>
+                
               </tr>
             </thead>
 
@@ -177,6 +178,23 @@
           <div align ="center">
             <span style=" display:inline-block; padding-top: 30px;">주문 내역이 없습니다.</span>
           </div>
+
+          <div class="paging">
+          <!-- Icon은 fontawesome에서 가져왔습니다. -->
+          <i class="fa-solid fa-angles-left" id="first_page"></i>
+          <i class="fa-solid fa-angle-left" id="prev_page"></i>
+          <div class="pages">
+            <span class="active">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>4</span>
+            <span>5</span>
+          </div>
+          <i class="fa-solid fa-angle-right" id="next_page"></i>
+          <i class="fa-solid fa-angles-right" id="last_page"></i>
+        </div>
+
+
         </form>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use strict";
 const db = require("../config/db");
 
+
 class CustomerStorage {
 
     static getCustomers(isAll,...fields) {
@@ -40,7 +41,10 @@ class CustomerStorage {
            
     }
        
+    
     }
+
+
 
     
 
