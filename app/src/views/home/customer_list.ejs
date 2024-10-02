@@ -63,16 +63,21 @@
 
             </ul>
             <div class="user_option">
-              <a href="login">
-                <img src="views/home/images/user.png" alt="">
-                <span>
-                  Login
-                </span>
-              </a>
-              <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-              </form>
+              <% if (session && session.user) { %>
+                <!-- 로그아웃 버튼 -->
+                <a href="/logout" onclick="return confirm('정말 로그아웃 하시겠습니까?')">
+                  <img src="views/home/images/user.png" alt="">
+                  <span>Logout</span>
+                </a>
+              <% } else { %>
+                <!-- 로그인 버튼 -->
+                <a href="/login">
+                  <img src="views/home/images/user.png" alt="">
+                  <span>Login</span>
+                </a>
+              <% } %>
             </div>
+            
           </div>
           <div>
             <div class="custom_menu-btn ">
@@ -180,7 +185,9 @@
                     <tr>
                         <td><%= customer.name %></td>
                         <td><%= customer.phone_number%></td>
-                        <td><%= customer.address %></td>
+                        <td><%= customer.address%>
+                          <%= customer.extra_address%>
+                          <%= customer.detail_address%></td>
                     </tr>
                 <% }) %>
             
@@ -197,6 +204,7 @@
                   <% } %>
               <% } %>
           </div>
+          
           </div>
            
           <div align ="center">
@@ -302,7 +310,7 @@
         const url = `/customer_list?customer_info=${customerInfo}&phone_number=${phoneNumber}`;
         window.location.href = url;
     });
-</script>
+  </script>
 
   <script type="text/javascript">
     $(".owl-carousel").owlCarousel({

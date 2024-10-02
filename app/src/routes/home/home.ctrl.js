@@ -3,69 +3,20 @@
 const User = require("../../models/User");
 const Customer = require("../../models/Customer");
 
-
+const isLoggedIn = require("../../middleware/authMiddleware"); 
 const db = require("../../config/db");
 
-
-
-
-
 const output = {
-    home : (req,res) => {
-        res.render("home/index");
+    home: (req, res) => {
+        res.render("home/index", { session: req.session });
     },
     
-    login : (req,res) => {
-        res.render("home/login");
+    login: (req, res) => {
+        res.render("home/login",{ session: req.session });
     },
     
-    customer_list : (req,res) => {
-       // res.render("home/customer_list");
-
-    //     const query = "SELECT * FROM customers";
-    //     db.query(query, function(err, result) {
-    //     if (err) {
-    //         res.status(500).send('데이터를 가져오는 중 오류가 발생했습니다.');
-    //         return;
-    //     }
-    //     res.render("home/customer_list",{customers:result});
-       
-    // });
-
-    
-//     const limit = parseInt(req.query.limit) || 5;  // 한 페이지에 표시할 고객 수 (기본값: 10)
-//     const page = parseInt(req.query.page) || 1;     // 현재 페이지 (기본값: 1)
-
-//     const offset = (page - 1) * limit;  // OFFSET 계산
-
-//     // MySQL 쿼리에서 LIMIT과 OFFSET을 사용하여 페이징된 데이터 가져오기
-//     const query = `SELECT * FROM customers LIMIT ${limit} OFFSET ${offset}`;
-//     db.query(query, function(err, result) {
-//         if (err) {
-//             return res.status(500).send('데이터를 가져오는 중 오류가 발생했습니다.');
-//         }
-
-//         // 전체 고객 수를 구하는 쿼리 (총 페이지 수를 계산하기 위함)
-//         db.query('SELECT COUNT(*) AS count FROM customers', (err, data) => {
-//             if (err) {
-//                 return res.status(500).send('총 고객 수를 가져오는 중 오류가 발생했습니다.');
-//             }
-
-//             const totalCustomers = data[0].count;
-//             const totalPages = Math.ceil(totalCustomers / limit);  // 전체 페이지 수 계산
-
-//             // EJS 템플릿 렌더링
-//             res.render('home/customer_list', {
-//                 customers: result,
-//                 currentPage: page,
-//                 totalPages: totalPages,
-//                 limit: limit
-//             });
-//         });
-   
-// });
-
-        const limit = parseInt(req.query.limit) || 3;  // 한 페이지당 고객 수 (기본값: 10)
+    customer_list: [isLoggedIn, (req, res) => {  // 로그인 확인 미들웨어 추가
+        const limit = parseInt(req.query.limit) || 10;  // 한 페이지당 고객 수 (기본값: 10)
         const page = parseInt(req.query.page) || 1;     // 현재 페이지 (기본값: 1)
         const offset = (page - 1) * limit;
 
@@ -130,52 +81,63 @@ const output = {
                     totalPages: totalPages,
                     limit: limit,
                     customerInfo: customerInfo,
-                    phoneNumber: phoneNumber
+                    phoneNumber: phoneNumber,
+                    session: req.session
                 });
             });
         });
-
-    },
+    }],
     
-    order_entry : (req,res) => {
-        res.render("home/order_entry");
-    },
+    order_entry: [isLoggedIn, (req, res) => {  // 로그인 확인 미들웨어 추가
+        res.render("home/order_entry",{ session: req.session });
+    }],
     
-    order_list : (req,res) => {
-        res.render("home/order_list");
-    },
+    order_list: [isLoggedIn, (req, res) => {  // 로그인 확인 미들웨어 추가
+        res.render("home/order_list",{ session: req.session });
+    }],
     
-    signup : (req,res) => {
-        res.render("home/signup");
+    signup: (req, res) => {
+        res.render("home/signup",{ session: req.session });
     },
-
-}
-
-
-
+};
 
 const process = {
-    login : async (req, res) => {
+    login: async (req, res) => {
         const user = new User(req.body);
         const response = await user.login();
+        if (response.success) {
+            // 로그인 성공 시 세션에 사용자 정보를 저장
+            req.session.user = {
+                id: req.body.id,
+                name: response.name, // 추가로 필요한 정보가 있다면 여기에 포함
+            };
+        }
         return res.json(response);
- 
     },
 
-    signup : async (req, res) => {
+    logout: (req, res) => {
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("로그아웃 중 오류 발생:", err);
+                return res.status(500).send("로그아웃 중 오류가 발생했습니다.");
+            }
+            res.redirect("/login");  // 로그아웃 후 로그인 페이지로 이동
+        });
+    },
+
+
+    signup: async (req, res) => {
         const user = new User(req.body);
         const response = await user.signup();
         return res.json(response);
     },
 
-    order_entry : async (req, res) => {
+    order_entry: async (req, res) => {
         const customer = new Customer(req.body);
         const response = await customer.order_entry();
         return res.json(response);
     },
-
 };
-
 
 module.exports = {
     output,

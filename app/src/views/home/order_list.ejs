@@ -59,16 +59,38 @@
               </li>
             </ul>
             <div class="user_option">
-              <a href="login">
-                <img src="views/home/images/user.png" alt="">
-                <span>
-                  Login
-                </span>
-              </a>
+              <% if (session.user) { %>
+                <!-- 로그아웃 버튼 -->
+                <a href="#" onclick="confirmLogout()">
+                  <img src="views/home/images/user.png" alt="">
+                  <span>
+                    Logout
+                  </span>
+                </a>
+              <% } else { %>
+                <!-- 로그인 버튼 -->
+                <a href="/login">
+                  <img src="views/home/images/user.png" alt="">
+                  <span>
+                    Login
+                  </span>
+                </a>
+              <% } %>
               <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                <button class="btn my-2 my-sm-0 nav_search-btn" type="submit"></button>
               </form>
             </div>
+            
+            <script>
+              function confirmLogout() {
+                if (confirm('정말 로그아웃 하시겠습니까?')) {
+                  // 사용자가 확인을 눌렀을 경우 로그아웃 페이지로 이동
+                  window.location.href = "/logout";
+                }
+              }
+            </script>
+            
+
           </div>
           <div>
             <div class="custom_menu-btn ">

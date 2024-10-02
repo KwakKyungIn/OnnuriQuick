@@ -14,7 +14,7 @@ class Customer{
                 
             }catch(err){
          
-                return {success : false, msg : "asd"};
+                return {success : false, msg : `에러 발생: ${err}`};
                 
               
             }

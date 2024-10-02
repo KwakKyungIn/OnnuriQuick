@@ -20,6 +20,7 @@ router.get("/order_list", ctrl.output.order_list);
 
 router.get("/signup", ctrl.output.signup);
 router.post("/signup", ctrl.process.signup);
+router.get("/logout", ctrl.process.logout);
 
 
 

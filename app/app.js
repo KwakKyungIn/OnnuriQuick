@@ -2,10 +2,25 @@
 
 //모듈
 const express = require("express");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
+app.use(cookieParser());  // 쿠키 파서 미들웨어 설정
+app.use(session({
+    secret: 'secret key',  // 세션 암호화를 위한 키
+    resave: false,
+    saveUninitialized: true,
+    cookie: { 
+        maxAge: 1000 * 60 * 30,
+        secure: false 
+    }  // HTTPS를 사용하는 경우에만 true로 설정
+})
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 //라우팅
 const home = require("./src/routes/home");
 
@@ -18,7 +33,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
 
+
 app.use("/", home); // use는 미들웨어 등록 위한 메소드
+
+
 
 module.exports = app;
 
