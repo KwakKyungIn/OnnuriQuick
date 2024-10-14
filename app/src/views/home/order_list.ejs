@@ -76,9 +76,9 @@
                   </span>
                 </a>
               <% } %>
-              <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+              <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
                 <button class="btn my-2 my-sm-0 nav_search-btn" type="submit"></button>
-              </form>
+              </form> -->
             </div>
             
             <script>
@@ -94,7 +94,7 @@
           </div>
           <div>
             <div class="custom_menu-btn ">
-              <button>
+              <!-- <button>
                 <span class=" s-1">
 
                 </span>
@@ -104,7 +104,7 @@
                 <span class="s-3">
 
                 </span>
-              </button>
+              </button> -->
             </div>
           </div>
 
@@ -141,33 +141,53 @@
           <div id="search">
           
             <div style="border: solid 1px gray; padding: 20px;">
-              <select style="padding: 5px;">
-          
-                <option>배달 현황</option>
-            
-                <option>입금전</option>
-                
-                <option>배송준비중</option>
-              
-                <option>배송중</option>
-              
-                <option>배송완료</option>
-              
-                <option>취소</option>
-              
-                <option>교환</option>
-                
-                <option>반품</option>
-          
-              </select>&nbsp;
-          
-          
-              <input type="date"
-              style="padding: 3px;" /> ~ <input type="date" style="padding: 3px;" />&nbsp;
 
-              <button type ="button" id = "searchBtn">
-               조회
-              </button>
+             
+              
+
+              
+  <!-- 주문 조회 필터 폼 -->
+<form action="/order_list" method="get">
+  <div>
+  <div>
+  <label for="status">현황 : </label>
+  <select name="status" id="status">
+    <option value="">전체</option>
+    <option value="배차 대기" <%= status === '배차 대기' ? 'selected' : '' %>>배차 대기</option>
+    <option value="배달중" <%= status === '배달중' ? 'selected' : '' %>>배달중</option>
+    <option value="배달 완료" <%= status === '배달 완료' ? 'selected' : '' %>>배달 완료</option>
+  </select>
+
+  <input type="date" id="start_date" name="start_date" value="<%= start_date %>">
+  <input type="date" id="end_date" name="end_date" value="<%= end_date %>">
+
+  <label for="sort_by">정렬 기준 : </label>
+      <select name="sort_by" id="sort_by">
+        <option value="order_number" <%= sort_by === 'order_number' ? 'selected' : '' %>>주문 번호</option>
+        <option value="order_time" <%= sort_by === 'order_time' ? 'selected' : '' %>>주문 시간</option>
+      </select>
+</div>
+<div>
+  <label for="name">이름 : </label>
+  <input type="text" id="name" name="name" value="<%= name %>" style="width: 100px;">
+
+  <label for="order_number">접수번호 : </label>
+  <input type="text" id="order_number" name="order_number" value="<%= order_number %>" style="width: 100px;">
+  <label for="delivery_person">배달 기사 : </label>
+  <input type="text" id="delivery_person" name="delivery_person" value="<%= delivery_person %>" style="width: 150px;">
+
+
+  <!-- 매장 이름 필터 추가 -->
+
+
+  <!-- 조회 버튼 -->
+  <button type="submit">조회</button>
+</div>
+</div>
+
+</form>
+
+
           
              
           
@@ -178,43 +198,127 @@
           <br/><br/>
 
           <span style="font-size: 10pt; font-weight: bold; display:inline-block; padding: 10px 10px; ">주문 상품 정보</span> 
+          <span style="float: right; font-weight: bold; padding-left: 20px; display: flex; align-items: center; justify-content: flex-end; height: 100%;">
+            총 <%= totalOrders %>건
+          </span>
           <table id="productInfo">
             <thead>
               <tr>
                 <th>현황</th>
+                <th>배달기사</th>
                 <th>접수번호</th>
                 <th>수령인</th>
-                <th style="width: 550px;">상세주소</th>
                 
-                <th>픽업예상/배달완료</th>
-                
+                <th>카드 미수</th>
+                <th style="width: 440px;">상세주소</th>
+                <th>삭제</th>
               </tr>
+              <tbody>
+                <% if (orders.length > 0) { %>
+                  <% orders.forEach(function(order) { %>
+                    <tr>
+                      <td><%= order.status %></td>
+                      <td><%= order.delivery_person%></td>
+                      <td><%= order.order_number%></td>
+                      <td><%= order.name%></td>
+                      
+                      <td>
+                        <!-- 카드 미수 여부를 O/X로 표시 -->
+                        <%= order.card === 1 ? 'O' : 'X' %>
+                      </td>
+                      <td><%= order.address%></td>
+                      <!-- 각 주문에 삭제 버튼 추가 -->
+                      <!-- 삭제 버튼에 Ajax 요청으로 변경 -->
+<!-- 각 주문에 삭제 버튼을 상태에 따라 조건부로 표시 -->
+<td>
+  <% if (order.status !== '배달 완료') { %>
+    <form class="delete-order-form" data-order-number="<%= order.order_number %>">
+      <button type="button" class="delete-btn" onclick="deleteOrder(this)">배차 취소</button>
+    </form>
+  <% } else { %>
+    <!-- 배달 완료 상태일 경우 삭제 버튼 대신 텍스트 표시 -->
+    <span>취소 불가</span>
+  <% } %>
+</td>
+
+
+<script>
+  // 주문 삭제 함수
+  function deleteOrder(button) {
+    const form = button.closest('.delete-order-form');
+    const orderNumber = form.getAttribute('data-order-number');
+
+    if (confirm('정말 삭제하시겠습니까?')) {
+      // Ajax 요청을 사용하여 주문 삭제 처리
+      fetch('/order_list/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `order_number=${orderNumber}`,
+      })
+      .then(response => {
+        if (response.ok) {
+          alert('주문이 성공적으로 삭제되었습니다.');
+          window.location.reload();  // 페이지 새로고침
+        } else {
+          alert('주문 삭제 중 오류가 발생했습니다.');
+        }
+      })
+      .catch(error => {
+        console.error('삭제 요청 중 오류:', error);
+        alert('주문 삭제 중 오류가 발생했습니다.');
+      });
+    }
+  }
+</script>
+
+
+                    </tr>
+                  <% }); %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="5">주문 내역이 없습니다.</td>
+                  </tr>
+                <% } %>
+              </tbody>
+              
+              
+              
             </thead>
-
-            <tbody>
-              <tr>
-
-              </tr>
-            </tbody>
           </table>
-          <div align ="center">
-            <span style=" display:inline-block; padding-top: 30px;">주문 내역이 없습니다.</span>
-          </div>
+       
 
-          <div class="paging">
-          <!-- Icon은 fontawesome에서 가져왔습니다. -->
-          <i class="fa-solid fa-angles-left" id="first_page"></i>
-          <i class="fa-solid fa-angle-left" id="prev_page"></i>
-          <div class="pages">
-            <span class="active">1</span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
-          </div>
-          <i class="fa-solid fa-angle-right" id="next_page"></i>
-          <i class="fa-solid fa-angles-right" id="last_page"></i>
-        </div>
+          <!-- 페이지 이동 버튼 -->
+<div class="paging">
+  <!-- 이전 페이지로 이동 버튼 -->
+  <% if (currentPage > 1) { %>
+    <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">
+      &laquo;
+    </a>
+  <% } %>
+
+  <!-- 페이지 번호 출력 -->
+  <% for (let i = 1; i <= totalPages; i++) { %>
+    <% if (i === currentPage) { %>
+      <a href="?page=<%= i %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link current-page">
+        <%= i %>
+      </a>
+    <% } else { %>
+      <a href="?page=<%= i %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">
+        <%= i %>
+      </a>
+    <% } %>
+  <% } %>
+
+  <!-- 다음 페이지로 이동 버튼 -->
+  <% if (currentPage < totalPages) { %>
+    <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">
+      &raquo;
+    </a>
+  <% } %>
+</div>
+
 
 
         </form>

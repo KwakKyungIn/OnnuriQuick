@@ -76,9 +76,9 @@
                   </span>
                 </a>
               <% } %>
-              <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+              <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
                 <button class="btn my-2 my-sm-0 nav_search-btn" type="submit"></button>
-              </form>
+              </form> -->
             </div>
             
             <script>
@@ -93,7 +93,7 @@
           </div>
           <div>
             <div class="custom_menu-btn ">
-              <button>
+              <!-- <button>
                 <span class=" s-1">
 
                 </span>
@@ -103,7 +103,7 @@
                 <span class="s-3">
 
                 </span>
-              </button>
+              </button> -->
             </div>
           </div>
 
@@ -118,76 +118,138 @@
 
   <section class="about_section layout_padding">
     <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="detail-box">
-            <div class="heading_container">
-              <h2>
-                주문 입력
-              </h2>
-            </div>
-            
-            <p>
-              수령인 정보
-            </p>
-            
-            <input id = "customer_name" name = "customer_info" placeholder="수령인 입력" type="text" />
-            <input id = "phone_number" name = "phone_number" placeholder="휴대폰 번호 입력" type="text" />
+        <div class="row d-flex">
+            <!-- 주문 입력 섹션 -->
+            <div class="col-md-6 order-section">
+                <div class="detail-box">
+                    <div class="heading_container">
+                        <h2>주문 입력</h2>
+                    </div>
+                    <!-- 수령인 정보 -->
+                    <p>수령인 정보</p>
+                    <input id="customer_name" name="customer_info" placeholder="수령인 입력" type="text" />
+                    <input id="phone_number" name="phone_number" placeholder="휴대폰 번호 입력" type="text" />
 
-            <p>
-              주소 검색
-            </p>
+                    <!-- 주소 검색 -->
+                    <p>주소 검색</p>
+                    <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+                    <input type="text" id="sample6_postcode" placeholder="우편번호">
+                    <div>
+                        <input  type="text" id="sample6_address" placeholder="주소"><br>
+                        
+                        <input  type="text" id="sample6_extraAddress" placeholder="추가주소(자동입력됨)">
+                        
+                    </div>
+                    <input type="text" id="sample6_detailAddress" placeholder="상세주소">
+                    <!-- 배달 요청 -->
+                    <div style="padding: 10px; text-align: left;">
+                        <label for="email">배달 요청</label> <input id="request" name="customer_info" placeholder="요청사항" type="text" />
+                      </div>
 
-            <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-            <input type="text" id="sample6_postcode" placeholder="우편번호">
-            <div>
-            <input type="text" id="sample6_address" placeholder="주소"><br>
-            <input type="text" id="sample6_extraAddress" placeholder="추가주소(자동입력됨)">
-            <input type="text" id="sample6_detailAddress" placeholder="상세주소">
-            </div>
-            
-            
-            
+                        
+                  
 
-              <div>
-                <label for="email">배달 요청</label>
-                <input type="checkbox" id="scales" name="scales"/>
-                <label for="scales">카드 단말기</label>
-                <div>
-                <input id="request" name = "customer_info" placeholder="요청사항" type="text" />
+                    <!-- 공동현관 -->
+                     <div>
+                    <p>공동현관</p>
+                    <select name="option" id="option">
+                        <option value="nowbaedal">경비실 호출</option>
+                        <option value="etc">현관 비밀번호</option>
+                        <option value="etc">없음</option>
+                    </select>
+                    <input id="entrance_password" name="entrance_password" placeholder="비밀번호 입력" type="text" />
+                    </div>
+                    
+                    <div>
+                      <p>결제 옵션</p>
+                      <input type="checkbox" id="card_misu" name="card_misu" />
+                      <label for="card_misu">카드 미수</label>
+                    </div>
+
+
+
+                    <!-- 특이사항 -->
+                    <div>
+                        <p>특이사항</p>
+                        <input id="special_notes" name="customer_info" placeholder="특이사항 입력" type="text" />
+                    </div>
+
+                    <button id="takeBtn" type="button">접수</button>
                 </div>
-              </div>
-               
-             
-
-            <p>
-              공동현관
-            </p>
-
-            <select name="option" id="option">
-              <option value="nowbaedal">경비실 호출</option>
-              <option value="etc">기타 옵션</option>
-            </select>
-            <input id = "entrance_password" name = "entrance_password" placeholder="비밀번호 입력" type="text" />
-            <div>
-              <p>
-              특이사항
-              </p>
-              <input id="special_notes" name = "customer_info" placeholder="주문금액 입력" type="text" />
             </div>
 
-            <button id = "takeBtn" type = "button">
-              접수
-            </button>
-          </div>
-        </div>
-        
-        
+            <!-- 고객 선택 섹션 -->
+          <!-- 고객 선택 섹션 -->
+<div class="col-md-6 customer-section">
+  <div class="detail-box">
+    <div class="heading_container">
+      <h2>고객 선택</h2>
+    </div>
+    <label for="customer_list">고객 선택:</label>
+    <!-- 검색 입력 필드 추가 -->
+    <input type="text" id="customer_search" placeholder="이름 또는 번호로 검색" onkeyup="filterCustomers()" />
+    <div class="scrollable-list fixed-height" style="overflow-y: scroll;">
+      <!-- 고객 리스트가 스크롤 가능한 형태 -->
+      <ul id="customer_list" class="list-group">
+        <% if (customers.length > 0) { %>
+          <% customers.forEach(customer => { %>
+          <li class="list-group-item"
+              onclick="selectCustomer('<%= customer.name %>', '<%= customer.phone_number %>', '<%= customer.zipcode %>', '<%= customer.address %>', '<%= customer.extra_address %>', '<%= customer.detail_address %>')">
+            <%= customer.name %> (<%= customer.phone_number %>)
+          </li>
+          <% }); %>
+        <% } else { %>
+          <!-- 고객이 없을 때 표시할 메시지 -->
+          <li class="list-group-item" style="text-align: center;">
+            고객이 존재하지 않습니다
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
       </div>
     </div>
   </section>
 
+
   <!-- end about section -->
+
+  <script>
+    function filterCustomers() {
+      // 검색어 가져오기
+      const searchValue = document.getElementById('customer_search').value.toLowerCase();
+      
+      // 고객 리스트의 모든 항목 가져오기
+      const customerItems = document.querySelectorAll('#customer_list .list-group-item');
+  
+      customerItems.forEach(item => {
+        // 고객 이름과 전화번호 텍스트 가져오기
+        const customerName = item.textContent.toLowerCase();
+        
+        // 검색어가 포함되어 있는지 여부를 체크
+        if (customerName.includes(searchValue)) {
+          item.style.display = "";  // 검색어가 포함되면 보이도록 설정
+        } else {
+          item.style.display = "none";  // 포함되지 않으면 숨김 처리
+        }
+      });
+    }
+  </script>
+  
+   <script>
+   function selectCustomer(name, phone, zipcode, address, extraAddress, detailAddress) {
+    document.getElementById('customer_name').value = name;
+    document.getElementById('phone_number').value = phone;
+    document.getElementById('sample6_postcode').value = zipcode;
+    document.getElementById('sample6_address').value = address;
+    document.getElementById('sample6_extraAddress').value = extraAddress;
+    document.getElementById('sample6_detailAddress').value = detailAddress;
+}
+    </script>
 
 
   <!-- info section -->
