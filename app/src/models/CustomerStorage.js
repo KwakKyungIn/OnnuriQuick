@@ -7,10 +7,10 @@ class CustomerStorage {
     static async save(customerInfo, sessionUser) {
         return new Promise((resolve, reject) => {
             const checkCustomerQuery = `
-                SELECT idx FROM customers WHERE phone_number = ? AND address = ?;
+                SELECT idx FROM customers WHERE phone_number = ? AND address = ? AND registered_store = ?;
             `;
             
-            db.query(checkCustomerQuery, [customerInfo.phone_number, customerInfo.address], (err, result) => {
+            db.query(checkCustomerQuery, [customerInfo.phone_number, customerInfo.address, sessionUser.name], (err, result) => {
                 if (err) {
                     return reject(`고객 정보 확인 오류: ${err}`);
                 }

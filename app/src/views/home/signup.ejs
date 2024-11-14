@@ -101,7 +101,7 @@
     <div class="container ">
       <div class="heading_container">
         <h2 class="">
-          Sign Up
+          회원가입
         </h2>
       </div>
 
@@ -111,35 +111,47 @@
         <div class="col-md-6">
           <form action="">
             <div>
-              <label for="signup_id">ID</label>
+              <label for="signup_id">이메일 주소(ID)</label>
               <input id = "signup_id" name = "email" type="text" />
               <!-- autocoplete = "on" 까먹지 말자-->
             </div>
 
             <div>
-              <label for="name">Name</label>
+              <label for="name">이름</label>
               <input id = "name" name = "name" type="text" />
               <!-- autocoplete = "on" 까먹지 말자-->
             </div>
 
             <div>
               <label for="password"
-              >Password
-            </label>
+              >비밀번호
+              </label>
               <input id="password" name="password" type="password" />
             </div>
 
             <div>
             <label for="password"
-              >Confirm Password
+              >비밀번호 확인
             </label>
+            <input id="confirm-password" name="confirm-password" type="password" />
 
-              <input id="confirm-password" name="confirm-password" type="password" />
+            <div>
+              <label for="store_name">매장 상호 명</label>
+              <input id = "store_name" store_name = "store_name" type="text" />
+              <!-- autocoplete = "on" 까먹지 말자-->
+            </div>
+            <div>
+              <label for="store_address">매장 주소</label>
+              <input id = "store_address" store_address = "store_address" type="text" />
+              <!-- autocoplete = "on" 까먹지 말자-->
+            </div>
+
+              
 
               <div class="user_option">
                 <button id = "signupBtn" type="button" >
                   <!-- onclick="location.href='login'" 이걸로 회원가입 버튼에 링크 지정하자-->
-                        Sign Up
+                        회원가입 완료
                 </button>
               
                 
@@ -159,59 +171,35 @@
 
 
           
-  <!-- info section -->
   <section class="info_section layout_padding2">
     <div class="container">
       <div class="info_logo">
-        <h2>
-          Onnuri Quick
-        </h2>
+        <h2>Onnuri Quick</h2>
       </div>
       <div class="row">
-
         <div class="col-md-3">
           <div class="info_contact">
-            <h5>
-              About Shop
-            </h5>
+            <h5>About Shop</h5>
             <div>
               <div class="img-box">
                 <img src="views/home/images/location-white.png" width="18px" alt="">
               </div>
-              <p>
-                회사 주소
-              </p>
+              <p>서울 특별시 강남구 도곡로 18길 35, 2동 605호</p>
             </div>
             <div>
               <div class="img-box">
                 <img src="views/home/images/telephone-white.png" width="12px" alt="">
               </div>
-              <p>
-                회사 번호
-              </p>
+              <p>010-8538-5993</p>
             </div>
             <div>
               <div class="img-box">
                 <img src="views/home/images/envelope-white.png" width="18px" alt="">
               </div>
-              <p>
-                회사 이메일
-              </p>
+              <p>gkmglobal@naver.com</p>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="info_info">
-            <h5>
-              Informations
-            </h5>
-            <p>
-              여기에 기본적인 회사 정보가 들어갈 예정
-          </div>
-        </div>
-
-        
-        
       </div>
     </div>
   </section>

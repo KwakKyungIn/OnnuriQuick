@@ -14,7 +14,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
     cookie: { 
-        maxAge: 1000 * 60 * 30,
+        maxAge: 1000 * 60 * 60 * 8,
         secure: false 
     }  // HTTPS를 사용하는 경우에만 true로 설정
 })

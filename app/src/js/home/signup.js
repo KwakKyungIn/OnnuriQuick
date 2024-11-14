@@ -2,6 +2,8 @@
 
 const signup_id = document.querySelector("#signup_id"),
     name = document.querySelector("#name"),
+    store_name = document.querySelector("#store_name"),
+    store_address = document.querySelector("#store_address"),
     password = document.querySelector("#password"),
     confirmPassword = document.querySelector("#confirm-password"),
     signupBtn = document.querySelector("#signupBtn");
@@ -19,7 +21,9 @@ function signup() {
 
     const req = {
         id: signup_id.value,
-        name: name.value,
+        person_name: name.value,
+        name: store_name.value,
+        store_address: store_address.value,
         password: password.value,
     };
 

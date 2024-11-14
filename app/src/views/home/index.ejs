@@ -63,9 +63,12 @@
             </ul>
             <div class="user_option">
               <% if (session.user) { %>
+                <span style="color: white;">
+                  <%= session.user.name %>
+                </span>
                 <!-- 로그아웃 버튼 -->
                 <a href="#" onclick="confirmLogout()">
-                  <img src="views/home/images/user.png" alt="">
+                  <img src="views/home/images/user.pn" alt="">
                   <span>
                     Logout
                   </span>
@@ -130,9 +133,7 @@
                       Onnuri_Quick
                      
                     </h1>
-                    <p>
-                      대충 이 어플 및 사이트 홍보하는 말이 들어갈 예정인 부분이니 쓸 내용 생각해주면 땡스 없어도 상관없는 부분이긴 함
-                    </p>
+                    
                     
                   </div>
                 </div>
@@ -188,48 +189,46 @@
 
  
 
-  <!-- info section -->
   <section class="info_section layout_padding2">
     <div class="container">
       <div class="info_logo">
-        <h2>
-          Onnuri Quick
-        </h2>
+        <h2>Onnuri Quick</h2>
       </div>
       <div class="row">
-
         <div class="col-md-3">
           <div class="info_contact">
-            <h5>
-              About Shop
-            </h5>
+            <h5>About Shop</h5>
             <div>
               <div class="img-box">
                 <img src="views/home/images/location-white.png" width="18px" alt="">
               </div>
-              <p>
-                회사 주소
-              </p>
+              <p>서울 특별시 강남구 도곡로 18길 35, 2동 605호</p>
             </div>
             <div>
               <div class="img-box">
                 <img src="views/home/images/telephone-white.png" width="12px" alt="">
               </div>
-              <p>
-                회사 번호
-              </p>
+              <p>010-8538-5993</p>
             </div>
             <div>
               <div class="img-box">
                 <img src="views/home/images/envelope-white.png" width="18px" alt="">
               </div>
-              <p>
-                회사 이메일
-              </p>
+              <p>gkmglobal@naver.com</p>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
+      </div>
+    </div>
+  </section>
+      
+        
+        
+      </div>
+    </div>
+  </section>
+
+   <!-- <div class="col-md-3">
           <div class="info_info">
             <h5>
               Informations
@@ -237,13 +236,7 @@
             <p>
               여기에 기본적인 회사 정보가 들어갈 예정
           </div>
-        </div>
-
-        
-        
-      </div>
-    </div>
-  </section>
+        </div> -->
 
   <!-- end info_section -->
 

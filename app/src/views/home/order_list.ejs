@@ -60,9 +60,12 @@
             </ul>
             <div class="user_option">
               <% if (session.user) { %>
+                <span style="color: white;">
+                  <%= session.user.name %>
+                </span>
                 <!-- 로그아웃 버튼 -->
                 <a href="#" onclick="confirmLogout()">
-                  <img src="views/home/images/user.png" alt="">
+                  <img src="views/home/images/user.pn" alt="">
                   <span>
                     Logout
                   </span>
@@ -175,7 +178,11 @@
   <input type="text" id="order_number" name="order_number" value="<%= order_number %>" style="width: 100px;">
   <label for="delivery_person">배달 기사 : </label>
   <input type="text" id="delivery_person" name="delivery_person" value="<%= delivery_person %>" style="width: 150px;">
-
+  <% if (session.user && session.user.name === 'rootAdmin') { %>
+    <!-- rootAdmin 계정일 때만 매장 이름 필터 표시 -->
+    <label for="store_name">매장 이름 : </label>
+    <input type="text" id="store_name" name="store_name" value="<%= store_name %>" style="width: 150px;">
+  <% } %>
 
   <!-- 매장 이름 필터 추가 -->
 
@@ -201,24 +208,41 @@
           <span style="float: right; font-weight: bold; padding-left: 20px; display: flex; align-items: center; justify-content: flex-end; height: 100%;">
             총 <%= totalOrders %>건
           </span>
+
+          <style>
+            /* 배차 취소 상태인 행에 적용할 스타일 */
+            .canceled-row {
+              
+              color: #b30000;           /* 진한 빨간색 텍스트 */
+              text-decoration: line-through; /* 취소선 */
+            }
+          </style>
+
+
+
           <table id="productInfo">
             <thead>
               <tr>
                 <th>현황</th>
                 <th>배달기사</th>
+                <th>배달 기사 번호</th>
                 <th>접수번호</th>
                 <th>수령인</th>
                 
                 <th>카드 미수</th>
-                <th style="width: 440px;">상세주소</th>
+                <% if (session.user && session.user.name === 'rootAdmin') { %>
+                  <th>매장 이름</th> <!-- rootAdmin에게만 표시 -->
+                <% } %>
+                <th style="width: 350px;">상세주소</th>
                 <th>삭제</th>
               </tr>
               <tbody>
                 <% if (orders.length > 0) { %>
                   <% orders.forEach(function(order) { %>
-                    <tr>
+                    <tr class="<%= order.status === '배차 취소' ? 'canceled-row' : '' %>">
                       <td><%= order.status %></td>
                       <td><%= order.delivery_person%></td>
+                      <td><%= order.delivery_phone_number %></td>
                       <td><%= order.order_number%></td>
                       <td><%= order.name%></td>
                       
@@ -226,20 +250,26 @@
                         <!-- 카드 미수 여부를 O/X로 표시 -->
                         <%= order.card === 1 ? 'O' : 'X' %>
                       </td>
+                      <% if (session.user && session.user.name === 'rootAdmin') { %>
+                        <td><%= order.store_name %></td> <!-- rootAdmin에게만 표시 -->
+                      <% } %>
                       <td><%= order.address%></td>
                       <!-- 각 주문에 삭제 버튼 추가 -->
                       <!-- 삭제 버튼에 Ajax 요청으로 변경 -->
 <!-- 각 주문에 삭제 버튼을 상태에 따라 조건부로 표시 -->
 <td>
-  <% if (order.status !== '배달 완료') { %>
+  <% if (order.status === '배달 완료') { %>
+    <span>취소 불가</span>
+  <% } else if (order.status === '배차 취소') { %>
+    <span>취소 완료</span>
+  <% } else { %>
     <form class="delete-order-form" data-order-number="<%= order.order_number %>">
       <button type="button" class="delete-btn" onclick="deleteOrder(this)">배차 취소</button>
     </form>
-  <% } else { %>
-    <!-- 배달 완료 상태일 경우 삭제 버튼 대신 텍스트 표시 -->
-    <span>취소 불가</span>
   <% } %>
 </td>
+
+
 
 
 <script>
@@ -290,35 +320,26 @@
        
 
           <!-- 페이지 이동 버튼 -->
-<div class="paging">
-  <!-- 이전 페이지로 이동 버튼 -->
-  <% if (currentPage > 1) { %>
-    <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">
-      &laquo;
-    </a>
-  <% } %>
-
-  <!-- 페이지 번호 출력 -->
-  <% for (let i = 1; i <= totalPages; i++) { %>
-    <% if (i === currentPage) { %>
-      <a href="?page=<%= i %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link current-page">
-        <%= i %>
-      </a>
-    <% } else { %>
-      <a href="?page=<%= i %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">
-        <%= i %>
-      </a>
-    <% } %>
-  <% } %>
-
-  <!-- 다음 페이지로 이동 버튼 -->
-  <% if (currentPage < totalPages) { %>
-    <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">
-      &raquo;
-    </a>
-  <% } %>
-</div>
-
+          <div class="paging">
+            <% if (currentPage > 1) { %>
+              <a href="?page=<%= currentPage - 1 %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">&laquo;</a>
+            <% } %>
+          
+            <% pages.forEach(function(page) { %>
+              <% if (page === '...') { %>
+                <span>...</span>
+              <% } else if (page === currentPage) { %>
+                <a href="?page=<%= page %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link current-page"><%= page %></a>
+              <% } else { %>
+                <a href="?page=<%= page %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link"><%= page %></a>
+              <% } %>
+            <% }); %>
+          
+            <% if (currentPage < totalPages) { %>
+              <a href="?page=<%= currentPage + 1 %>&limit=<%= limit %>&status=<%= status %>&start_date=<%= start_date %>&end_date=<%= end_date %>" class="paging-link">&raquo;</a>
+            <% } %>
+          </div>
+          
 
 
         </form>
@@ -338,55 +359,32 @@
   <section class="info_section layout_padding2">
     <div class="container">
       <div class="info_logo">
-        <h2>
-          Onnuri Quick
-        </h2>
+        <h2>Onnuri Quick</h2>
       </div>
       <div class="row">
-
         <div class="col-md-3">
           <div class="info_contact">
-            <h5>
-              About Shop
-            </h5>
+            <h5>About Shop</h5>
             <div>
               <div class="img-box">
                 <img src="views/home/images/location-white.png" width="18px" alt="">
               </div>
-              <p>
-                회사 주소
-              </p>
+              <p>서울 특별시 강남구 도곡로 18길 35, 2동 605호</p>
             </div>
             <div>
               <div class="img-box">
                 <img src="views/home/images/telephone-white.png" width="12px" alt="">
               </div>
-              <p>
-                회사 번호
-              </p>
+              <p>010-8538-5993</p>
             </div>
             <div>
               <div class="img-box">
                 <img src="views/home/images/envelope-white.png" width="18px" alt="">
               </div>
-              <p>
-                회사 이메일
-              </p>
+              <p>gkmglobal@naver.com</p>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="info_info">
-            <h5>
-              Informations
-            </h5>
-            <p>
-              여기에 기본적인 회사 정보가 들어갈 예정
-          </div>
-        </div>
-
-        
-        
       </div>
     </div>
   </section>

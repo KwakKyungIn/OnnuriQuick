@@ -7,6 +7,57 @@ const CustomerStorage = require("../../models/CustomerStorage");
 const isLoggedIn = require("../../middleware/authMiddleware"); 
 const db = require("../../config/db");
 
+// 페이지 네비게이션 범위를 생성하는 함수
+function generatePagination(currentPage, totalPages, maxVisiblePages = 5) {
+    const pagination = [];
+    const halfVisible = Math.floor(maxVisiblePages / 2);
+
+    // 첫 페이지는 항상 표시
+    pagination.push(1);
+
+    // 첫 페이지일 때 - 처음 maxVisiblePages 범위만큼 표시 후 "..." 및 마지막 페이지 추가
+    if (currentPage === 1) {
+        for (let i = 2; i <= Math.min(totalPages - 1, maxVisiblePages); i++) {
+            pagination.push(i);
+        }
+        if (maxVisiblePages < totalPages - 1) {
+            pagination.push("...");
+        }
+    } 
+    // 마지막 페이지일 때 - 마지막 maxVisiblePages 범위만큼 표시
+    else if (currentPage === totalPages) {
+        if (totalPages > maxVisiblePages) {
+            pagination.push("...");
+        }
+        for (let i = Math.max(2, totalPages - maxVisiblePages + 1); i < totalPages; i++) {
+            pagination.push(i);
+        }
+    } 
+    // 중간 페이지일 때
+    else {
+        if (currentPage - halfVisible > 2) {
+            pagination.push("...");
+        }
+
+        for (let i = Math.max(2, currentPage - halfVisible); i <= Math.min(totalPages - 1, currentPage + halfVisible); i++) {
+            pagination.push(i);
+        }
+
+        if (currentPage + halfVisible < totalPages - 1) {
+            pagination.push("...");
+        }
+    }
+
+    // 마지막 페이지는 항상 표시
+    if (totalPages > 1) {
+        pagination.push(totalPages);
+    }
+
+    return pagination;
+}
+
+
+
 const output = {
     home: (req, res) => {
         res.render("home/index", { session: req.session });
@@ -116,19 +167,17 @@ const output = {
         const limit = parseInt(req.query.limit) || 10;
         const page = parseInt(req.query.page) || 1;
         const offset = (page - 1) * limit;
-        
         const status = req.query.status || '';
         const startDate = req.query.start_date || '';
         const endDate = req.query.end_date || '';
         const name = req.query.name || '';
         const orderNumber = req.query.order_number || '';
         const storeName = req.query.store_name || '';
-        const deliveryPerson = req.query.delivery_person || '';  // 배달 기사 이름 필터 추가
+        const deliveryPerson = req.query.delivery_person || '';
+        const sortBy = req.query.sort_by || 'order_time';
     
-        const sortBy = req.query.sort_by || 'order_time';  // 정렬 기준 추가 (기본값: order_number)
-        
         let query = `
-            SELECT 
+            SELECT DISTINCT 
                 order_info.idx AS order_idx,
                 order_info.status,
                 order_info.order_time,
@@ -138,134 +187,83 @@ const output = {
                 order_info.delivery_person,
                 customers.name,
                 customers.phone_number,
-                customers.address
+                customers.address,
+                delivery_man.phone_number AS delivery_phone_number
             FROM 
                 order_info
             JOIN 
                 customers ON order_info.customer_info = customers.idx
+            LEFT JOIN 
+                delivery_man ON order_info.delivery_person = delivery_man.name
             WHERE 
                 1=1`;
-        
+    
         let queryParams = [];
     
-        // 세션 사용자 이름으로 매장 이름 필터 추가
-        if (req.session.user && req.session.user.name) {
+        // 조건 추가
+        if (req.session.user && req.session.user.name !== "rootAdmin") {
             query += ` AND order_info.store_name = ?`;
             queryParams.push(req.session.user.name);
         }
-    
-        if (status) {
-            query += ` AND order_info.status = ?`;
-            queryParams.push(status);
-        }
-        if (startDate) {
-            query += ` AND order_info.order_time >= ?`;
-            queryParams.push(startDate);
-        }
-        if (endDate) {
-            query += ` AND order_info.order_time <= ?`;
-            queryParams.push(endDate);
-        }
-        if (name) {
-            query += ` AND customers.name LIKE ?`;
-            queryParams.push(`%${name}%`);
-        }
-        if (orderNumber) {
-            query += ` AND order_info.order_number LIKE ?`;
-            queryParams.push(`%${orderNumber}%`);
-        }
-        if (storeName) {
-            query += ` AND order_info.store_name LIKE ?`;
-            queryParams.push(`%${storeName}%`);
-        }
-        if (deliveryPerson) {
-            query += ` AND order_info.delivery_person LIKE ?`;
-            queryParams.push(`%${deliveryPerson}%`);
-        }
-    
-        // 정렬 기준에 따라 쿼리 변경
-        if (sortBy === 'order_number') {
-            query += ` ORDER BY order_info.order_number DESC`;  // 주문 번호 기준 내림차순
-        } else {
-            query += ` ORDER BY order_info.order_time DESC`;  // 주문 시간 기준 내림차순
-        }
-    
+        if (status) query += ` AND order_info.status = ?`, queryParams.push(status);
+        if (startDate) query += ` AND order_info.order_time >= ?`, queryParams.push(startDate);
+        if (endDate) query += ` AND order_info.order_time < ?`, queryParams.push(new Date(new Date(endDate).getTime() + 86400000).toISOString().split("T")[0]);
+        if (name) query += ` AND customers.name LIKE ?`, queryParams.push(`%${name}%`);
+        if (orderNumber) query += ` AND order_info.order_number LIKE ?`, queryParams.push(`%${orderNumber}%`);
+        if (storeName) query += ` AND order_info.store_name LIKE ?`, queryParams.push(`%${storeName}%`);
+        if (deliveryPerson) query += ` AND order_info.delivery_person LIKE ?`, queryParams.push(`%${deliveryPerson}%`);
+        
+        // 정렬 및 페이징
+        query += sortBy === 'order_number' ? ` ORDER BY order_info.order_number DESC` : ` ORDER BY order_info.order_time DESC`;
         query += ` LIMIT ? OFFSET ?`;
         queryParams.push(limit, offset);
-    
+        
         db.query(query, queryParams, (err, result) => {
-            if (err) {
-                console.error('쿼리 실행 중 오류:', err);
-                return res.status(500).send('데이터를 가져오는 중 오류가 발생했습니다.');
-            }
+            if (err) return res.status(500).send('데이터를 가져오는 중 오류가 발생했습니다.');
     
-            let countQuery = `SELECT COUNT(*) AS count FROM order_info
-                              JOIN customers ON order_info.customer_info = customers.idx
-                              WHERE 1=1`;
+            let countQuery = `SELECT COUNT(*) AS count FROM order_info JOIN customers ON order_info.customer_info = customers.idx WHERE order_info.status != '배차 취소'`;
             let countParams = [];
     
-            // 세션 사용자 이름으로 매장 이름 필터 추가
-            if (req.session.user && req.session.user.name) {
+            if (req.session.user && req.session.user.name !== "rootAdmin") {
                 countQuery += ` AND order_info.store_name = ?`;
                 countParams.push(req.session.user.name);
             }
-    
-            if (status) {
-                countQuery += ` AND order_info.status = ?`;
-                countParams.push(status);
-            }
-            if (startDate) {
-                countQuery += ` AND order_info.order_time >= ?`;
-                countParams.push(startDate);
-            }
-            if (endDate) {
-                countQuery += ` AND order_info.order_time <= ?`;
-                countParams.push(endDate);
-            }
-            if (name) {
-                countQuery += ` AND customers.name LIKE ?`;
-                countParams.push(`%${name}%`);
-            }
-            if (orderNumber) {
-                countQuery += ` AND order_info.order_number LIKE ?`;
-                countParams.push(`%${orderNumber}%`);
-            }
-            if (storeName) {
-                countQuery += ` AND order_info.store_name LIKE ?`;
-                countParams.push(`%${storeName}%`);
-            }
-            if (deliveryPerson) {
-                countQuery += ` AND order_info.delivery_person LIKE ?`;
-                countParams.push(`%${deliveryPerson}%`);
-            }
+            if (status) countQuery += ` AND order_info.status = ?`, countParams.push(status);
+            if (startDate) countQuery += ` AND order_info.order_time >= ?`, countParams.push(startDate);
+            if (endDate) countQuery += ` AND order_info.order_time < ?`, countParams.push(new Date(new Date(endDate).getTime() + 86400000).toISOString().split("T")[0]);
+            if (name) countQuery += ` AND customers.name LIKE ?`, countParams.push(`%${name}%`);
+            if (orderNumber) countQuery += ` AND order_info.order_number LIKE ?`, countParams.push(`%${orderNumber}%`);
+            if (storeName) countQuery += ` AND order_info.store_name LIKE ?`, countParams.push(`%${storeName}%`);
+            if (deliveryPerson) countQuery += ` AND order_info.delivery_person LIKE ?`, countParams.push(`%${deliveryPerson}%`);
     
             db.query(countQuery, countParams, (err, countResult) => {
-                if (err) {
-                    return res.status(500).send('총 주문 수를 가져오는 중 오류가 발생했습니다.');
-                }
-    
+                if (err) return res.status(500).send('총 주문 수를 가져오는 중 오류가 발생했습니다.');
+                
                 const totalOrders = countResult[0].count;
                 const totalPages = Math.ceil(totalOrders / limit);
-    
+                const pages = generatePagination(page, totalPages); // 페이지 범위 생성
+                
                 res.render('home/order_list', {
                     orders: result,
                     currentPage: page,
                     totalPages: totalPages,
                     limit: limit,
                     totalOrders: totalOrders,
+                    pages: pages,  // 페이지 범위 전달
                     status: status,
                     start_date: startDate,
                     end_date: endDate,
                     name: name,
                     order_number: orderNumber,
                     store_name: storeName,
-                    delivery_person: deliveryPerson,  // 배달 기사 이름 전달
-                    sort_by: sortBy,  // 정렬 기준 전달
+                    delivery_person: deliveryPerson,
+                    sort_by: sortBy,
                     session: req.session
                 });
             });
         });
     }],
+    
     
     
     
@@ -352,17 +350,17 @@ const process = {
     },
 
     deleteOrder: async (req, res) => {
-        const orderNumber = req.body.order_number;  // 삭제할 주문 번호
-        const query = `DELETE FROM order_info WHERE order_number = ?`;
-        
-        db.query(query, [orderNumber], (err, result) => {
-            if (err) {
-                console.error(`주문 삭제 중 오류: ${err}`);
-                return res.status(500).json({ success: false, msg: "주문 삭제 중 오류가 발생했습니다." });
-            }
+        const orderNumber = req.body.order_number;  // 취소할 주문 번호
+    const query = `UPDATE order_info SET status = '배차 취소' WHERE order_number = ?`;
+    
+    db.query(query, [orderNumber], (err, result) => {
+        if (err) {
+            console.error(`배차 취소 중 오류: ${err}`);
+            return res.status(500).json({ success: false, msg: "배차 취소 중 오류가 발생했습니다." });
+        }
 
-            return res.sendStatus(200);  
-        });
+        return res.sendStatus(200);  
+    });
     },
 };
 
